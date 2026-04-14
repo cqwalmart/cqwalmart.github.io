@@ -1,5 +1,35 @@
-import { questions } from "./data/questions.js";
 import { SCHOOL_RESULTS, HIDDEN_RESULTS, ALL_RESULT_META } from "./data/results.js";
+import v3Questions from "./data/v3-questions.generated.json" with { type: "json" };
+
+const questions = v3Questions.map((question, index) => ({
+  ...question,
+  tag: question.tag || `v3 正式题 ${index + 1}`,
+  options: question.options.map((option) => ({
+    label: option.label,
+    text: option.text,
+    vector: option.vector,
+  })),
+}));
+
+const SCORING_CONSTANTS = {
+  fudan: { maxPool: 72.816, mean: 18.724, sd: 6.353468 },
+  sjtu: { maxPool: 79.032, mean: 19.758, sd: 6.836192 },
+  sst: { maxPool: 68.732, mean: 21.694, sd: 5.950112 },
+  tongji: { maxPool: 52.116, mean: 13.029, sd: 4.711645 },
+  ecnu: { maxPool: 70.928, mean: 23.31, sd: 5.860901 },
+  sufe: { maxPool: 55.04, mean: 13.94, sd: 6.712966 },
+  sisu: { maxPool: 37.396, mean: 9.985, sd: 5.879877 },
+  ecupl: { maxPool: 55.976, mean: 15.511, sd: 5.640521 },
+  shu: { maxPool: 63.028, mean: 21.982, sd: 5.744779 },
+  ecust: { maxPool: 70.516, mean: 17.829, sd: 6.143168 },
+  dhu: { maxPool: 69.268, mean: 21.195, sd: 5.701066 },
+  nyush: { maxPool: 71.488, mean: 18.17, sd: 5.871018 },
+  abroad: { maxPool: 17.456, mean: 4.364, sd: 2.159497 },
+  resting: { maxPool: 4.48, mean: 1.12, sd: 1.371714 },
+  business: { maxPool: 4.48, mean: 1.12, sd: 1.371714 },
+  artdrop: { maxPool: 10.28, mean: 2.57, sd: 1.859113 },
+  alien: { maxPool: 0, mean: 0, sd: 0 },
+};
 
 const introScreen = document.getElementById("screen-intro");
 const quizScreen = document.getElementById("screen-quiz");
@@ -23,13 +53,14 @@ const runnerUpTitle = document.getElementById("runner-up-title");
 
 const schoolKeys = Object.keys(SCHOOL_RESULTS);
 const hiddenKeys = Object.keys(HIDDEN_RESULTS);
+const allKeys = [...schoolKeys, ...hiddenKeys];
 
 let currentIndex = 0;
 let answers = [];
-let scores = {};
+let rawScores = {};
 
 function makeEmptyScores() {
-  return [...schoolKeys, ...hiddenKeys].reduce((acc, key) => {
+  return allKeys.reduce((acc, key) => {
     acc[key] = 0;
     return acc;
   }, {});
@@ -45,7 +76,7 @@ function showScreen(screen) {
 function resetQuiz() {
   currentIndex = 0;
   answers = [];
-  scores = makeEmptyScores();
+  rawScores = makeEmptyScores();
 }
 
 function updateProgress() {
@@ -82,8 +113,11 @@ function renderQuestion() {
 function handleAnswer(option) {
   answers.push({ questionId: questions[currentIndex].id, option: option.label });
 
-  Object.entries(option.scores).forEach(([key, value]) => {
-    scores[key] += value;
+  option.vector.forEach((value, index) => {
+    const key = allKeys[index];
+    if (key) {
+      rawScores[key] += value * questions[currentIndex].weight;
+    }
   });
 
   currentIndex += 1;
@@ -95,31 +129,49 @@ function handleAnswer(option) {
   renderQuestion();
 }
 
-function getSortedEntries(keys) {
-  return [...keys]
-    .map((key) => [key, scores[key]])
-    .sort((a, b) => b[1] - a[1]);
+function computeSchoolMixScores() {
+  return schoolKeys.map((key) => {
+    const constants = SCORING_CONSTANTS[key];
+    const raw = rawScores[key] ?? 0;
+    const zScore = constants.sd ? (raw - constants.mean) / constants.sd : 0;
+    const rawCentered = constants.maxPool ? (raw - constants.mean) / constants.maxPool : 0;
+    const mixScore = 0.75 * zScore + 0.25 * rawCentered;
+
+    return {
+      key,
+      raw,
+      zScore,
+      rawCentered,
+      mixScore,
+    };
+  }).sort((a, b) => b.mixScore - a.mixScore);
+}
+
+function computeHiddenScores() {
+  return hiddenKeys.map((key) => {
+    const constants = SCORING_CONSTANTS[key];
+    const raw = rawScores[key] ?? 0;
+    const zScore = constants.sd ? (raw - constants.mean) / constants.sd : 0;
+    return { key, raw, zScore };
+  }).sort((a, b) => b.raw - a.raw);
 }
 
 function getFinalResult() {
-  const sortedSchools = getSortedEntries(schoolKeys);
-  const sortedHidden = getSortedEntries(hiddenKeys);
+  const sortedSchools = computeSchoolMixScores();
+  const sortedHidden = computeHiddenScores();
 
-  const [topSchoolKey, topSchoolScore] = sortedSchools[0];
-  const [runnerUpSchoolKey] = sortedSchools[1] || [null];
-  const [topHiddenKey, topHiddenScore] = sortedHidden[0];
+  const topSchool = sortedSchools[0];
+  const runnerUpSchool = sortedSchools[1] || null;
+  const topHidden = sortedHidden[0] || null;
 
   const shouldUseHidden =
-    topHiddenScore >= 10 && topHiddenScore >= topSchoolScore * 0.7;
-
-  const finalKey = shouldUseHidden ? topHiddenKey : topSchoolKey;
-  const runnerUpKey = shouldUseHidden ? topSchoolKey : runnerUpSchoolKey;
+    topHidden && topHidden.key !== "alien" && topHidden.raw >= 10 && topHidden.raw >= topSchool.raw * 0.7;
 
   return {
-    finalKey,
-    runnerUpKey,
-    topSchoolScore,
-    topHiddenScore,
+    finalKey: shouldUseHidden ? topHidden.key : topSchool.key,
+    runnerUpKey: shouldUseHidden ? topSchool.key : runnerUpSchool?.key ?? null,
+    schoolRanking: sortedSchools,
+    hiddenRanking: sortedHidden,
   };
 }
 
