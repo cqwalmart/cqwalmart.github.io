@@ -105,11 +105,6 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
   padding: 14px 22px;
   font-weight: 700;
 }
-#submit-btn,
-#share-btn {
-  margin-top: 0;
-  padding: 14px 22px;
-}
 .primary-btn:hover, .secondary-btn:hover, .option-btn:hover { transform: translateY(-1px); }
 .primary-btn:disabled, .secondary-btn:disabled {
   opacity: 0.48;
@@ -194,17 +189,7 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
 }
 .emphasis-box { background: #f4eddf; }
 .ranking-box ol { margin: 12px 0 0; padding: 0; line-height: 1.9; list-style: none; }
-.result-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 6px;
-  justify-content: space-between;
-  align-items: center;
-}
-.result-actions .primary-btn,
-.result-actions .secondary-btn {
-  min-width: 132px;
-}
+.result-actions { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
 
 @media (hover: hover) and (pointer: fine) {
   .option-btn:hover {
@@ -219,12 +204,4 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
   .quiz-topbar { padding: 20px 20px 16px; }
   .result-info-grid { grid-template-columns: 1fr; }
   .quiz-actions { flex-direction: column; }
-  .result-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .result-actions .primary-btn,
-  .result-actions .secondary-btn {
-    width: 100%;
-  }
 }
