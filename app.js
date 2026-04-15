@@ -92,6 +92,7 @@ const rankingList = document.getElementById('ranking-list');
 const schoolOrder = matrixData.schoolOrder;
 const questions = matrixData.questions.map((q) => ({
   ...q,
+  text: q.id === 13 ? '下面哪句话最容易让你破防，因为你心里知道它多少戳中了一点：' : q.text,
   options: Object.entries(q.options).map(([label, vector]) => ({ label, vector })),
 }));
 
