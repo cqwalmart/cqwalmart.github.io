@@ -161,6 +161,7 @@ function renderQuestion() {
 
   question.options.forEach((option) => {
     const button = document.createElement('button');
+    button.type = 'button';
     button.className = `option-btn${selected === option.label ? ' option-btn-selected' : ''}`;
     button.innerHTML = `
       <span class="option-row">
@@ -168,7 +169,15 @@ function renderQuestion() {
         <span class="option-text">${getOptionText(question.id, option.label)}</span>
       </span>
     `;
-    button.addEventListener('click', () => handleAnswer(option.label));
+    const clearFocus = (event) => {
+      event.currentTarget.blur();
+    };
+    button.addEventListener('mouseup', clearFocus);
+    button.addEventListener('touchend', clearFocus, { passive: true });
+    button.addEventListener('click', (event) => {
+      event.currentTarget.blur();
+      handleAnswer(option.label);
+    });
     optionsContainer.appendChild(button);
   });
 
