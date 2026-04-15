@@ -285,7 +285,7 @@ function renderResult() {
   resultTitle.textContent = top.school;
   resultSubtitle.textContent = meta.subtitle;
   resultMatch.textContent = `${topPercent}%`;
-  resultSummary.textContent = meta.summary;
+  resultSummary.textContent = '';
   resultReason.textContent = meta.reason;
   runnerUpTitle.textContent = second ? second.school : '-';
   runnerUpMatch.textContent = second ? `这个学校和你也挺合，匹配度 ${clampPercent(mixToPercent(second.mix))}%` : '';
