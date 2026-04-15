@@ -127,7 +127,6 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
   box-shadow: none;
   -webkit-tap-highlight-color: transparent;
 }
-.option-btn:hover { background: #f3ede1; }
 .option-btn:focus,
 .option-btn:focus-visible,
 .option-btn:active {
@@ -174,6 +173,12 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
 .emphasis-box { background: #f4eddf; }
 .ranking-box ol { margin: 12px 0 0 18px; padding: 0; line-height: 1.9; }
 .result-actions { display: flex; gap: 12px; margin-top: 6px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .option-btn:hover {
+    background: #f3ede1;
+  }
+}
 
 @media (max-width: 720px) {
   .page-shell { padding: 14px; align-items: stretch; }
