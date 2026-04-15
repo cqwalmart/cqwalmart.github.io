@@ -68,6 +68,7 @@ const quizScreen = document.getElementById('screen-quiz');
 const resultScreen = document.getElementById('screen-result');
 const startBtn = document.getElementById('start-btn');
 const retryBtn = document.getElementById('retry-btn');
+const shareBtn = document.getElementById('share-btn');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const submitBtn = document.getElementById('submit-btn');
@@ -287,7 +288,7 @@ function renderResult() {
   resultSummary.textContent = meta.summary;
   resultReason.textContent = meta.reason;
   runnerUpTitle.textContent = second ? second.school : '-';
-  runnerUpMatch.textContent = second ? `气质匹配率 ${clampPercent(mixToPercent(second.mix))}%` : '';
+  runnerUpMatch.textContent = second ? `这个学校和你也挺合，匹配度 ${clampPercent(mixToPercent(second.mix))}%` : '';
   runnerUpGap.textContent = '';
   resultAlgo.textContent = '匹配率为展示映射值，用来帮助理解结果强弱，不代表录取概率。';
 
@@ -314,6 +315,35 @@ startBtn.addEventListener('click', () => {
 retryBtn.addEventListener('click', () => {
   resetQuiz();
   showScreen(introScreen);
+});
+
+shareBtn.addEventListener('click', async () => {
+  const ranking = computeMixScores();
+  const top = ranking[0];
+  const meta = RESULT_META[top.school];
+  const shareText = `我测出来最像「${top.school}」\n气质匹配度 ${clampPercent(mixToPercent(top.mix))}%\n${meta.summary}\n来测测你会被哪种上海高校气质认领？\nhttps://sh-uni.gang.lv/`;
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: '上海高校气质测试',
+        text: shareText,
+        url: 'https://sh-uni.gang.lv/',
+      });
+      return;
+    }
+
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(shareText);
+      shareBtn.textContent = '已复制链接';
+      window.setTimeout(() => {
+        shareBtn.textContent = '分享结果';
+      }, 1600);
+      return;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 prevBtn.addEventListener('click', () => {

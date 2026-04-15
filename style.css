@@ -51,8 +51,15 @@ button:focus { outline: none; }
 
 .hero-block, .result-card { padding: 56px 48px; }
 .hero-main { text-align: center; }
-.hero-copy { max-width: 720px; margin: 28px auto 0; }
-.hero-sub { max-width: 700px; margin: 18px auto 0; line-height: 1.8; color: var(--muted); }
+.hero-copy { max-width: 720px; margin: 24px auto 0; }
+.hero-sub {
+  max-width: 700px;
+  margin: 18px auto 0;
+  line-height: 1.8;
+  color: var(--muted);
+  text-align: left;
+  text-indent: 2em;
+}
 .info-label, .eyebrow, .question-tag {
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -66,6 +73,11 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
 
 .subtle, .result-subtitle, .small-note, #result-summary, #result-reason { color: var(--muted); line-height: 1.8; }
 .small-note { font-size: 14px; }
+.hero-copy .subtle {
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(102, 95, 82, 0.82);
+}
 .match-score {
   font-size: clamp(34px, 6vw, 56px);
   line-height: 1;
@@ -176,8 +188,8 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
   border: 1px solid var(--line); border-radius: 18px; padding: 18px; background: #f9f6ef;
 }
 .emphasis-box { background: #f4eddf; }
-.ranking-box ol { margin: 12px 0 0 18px; padding: 0; line-height: 1.9; }
-.result-actions { display: flex; gap: 12px; margin-top: 6px; }
+.ranking-box ol { margin: 12px 0 0; padding: 0; line-height: 1.9; list-style: none; }
+.result-actions { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
 
 @media (hover: hover) and (pointer: fine) {
   .option-btn:hover {
