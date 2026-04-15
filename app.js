@@ -346,24 +346,32 @@ shareBtn.addEventListener('click', async () => {
   }
 });
 
-prevBtn.addEventListener('click', () => {
+function goPrevQuestion() {
   if (currentIndex === 0) return;
   currentIndex -= 1;
   renderQuestion();
-});
+}
 
-nextBtn.addEventListener('click', () => {
+function goNextQuestion() {
   if (!answers[currentIndex]) return;
   if (currentIndex >= questions.length - 1) return;
   currentIndex += 1;
   renderQuestion();
-});
+}
 
-submitBtn.addEventListener('click', () => {
+function submitCurrentQuiz() {
   if (currentIndex !== questions.length - 1) return;
   if (!answers[currentIndex]) return;
   finishQuiz();
-});
+}
+
+prevBtn.addEventListener('click', goPrevQuestion);
+nextBtn.addEventListener('click', goNextQuestion);
+submitBtn.addEventListener('click', submitCurrentQuiz);
+submitBtn.addEventListener('touchend', (event) => {
+  event.preventDefault();
+  submitCurrentQuiz();
+}, { passive: false });
 
 const OPTION_TEXT = {
   1: { A: '很多东西学过了，但过两天又跟没学一样', B: '每天都在赶，很多东西只能应付了事，本来多点时间就能搞明白', C: '从早学到晚也没停过，但整个人一直像吊着一口气', D: '学也在学、做也在做，但越来越想不明白为什么一定要按这套来' },
