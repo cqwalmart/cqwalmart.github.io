@@ -243,29 +243,12 @@ function computeMixScores() {
 }
 
 function mixToPercent(mix) {
-  if (mix <= -1) return 35;
-  if (mix <= -0.5) return 42;
-  if (mix <= 0) return 50;
-  if (mix <= 0.5) return 58;
-  if (mix <= 1.0) return 66;
-  if (mix <= 1.5) return 73;
-  if (mix <= 2.0) return 79;
-  if (mix <= 2.5) return 84;
-  if (mix <= 3.0) return 88;
-  if (mix <= 4.0) return 92;
-  return 95;
-}
-
-function gapAdjust(gap) {
-  if (gap < 0.15) return -4;
-  if (gap < 0.35) return -2;
-  if (gap < 0.7) return 0;
-  if (gap < 1.2) return 2;
-  return 4;
+  const sigmoid = 1 / (1 + Math.exp(-1.55 * (mix - 0.85)));
+  return Math.round(15 + 80 * sigmoid);
 }
 
 function clampPercent(value) {
-  return Math.max(35, Math.min(96, Math.round(value)));
+  return Math.max(15, Math.min(95, Math.round(value)));
 }
 
 function renderResult() {
@@ -273,8 +256,7 @@ function renderResult() {
   const top = ranking[0];
   const second = ranking[1];
   const meta = RESULT_META[top.school];
-  const topGap = second ? top.mix - second.mix : 0;
-  const topPercent = clampPercent(mixToPercent(top.mix) + gapAdjust(topGap));
+  const topPercent = clampPercent(mixToPercent(top.mix));
 
   resultTitle.textContent = top.school;
   resultSubtitle.textContent = meta.subtitle;
@@ -283,13 +265,13 @@ function renderResult() {
   resultReason.textContent = meta.reason;
   runnerUpTitle.textContent = second ? second.school : '-';
   runnerUpMatch.textContent = second ? `气质匹配率 ${clampPercent(mixToPercent(second.mix))}%` : '';
-  runnerUpGap.textContent = second ? `和第一名差距 ${topGap.toFixed(3)}` : '';
+  runnerUpGap.textContent = '';
   resultAlgo.textContent = '匹配率为展示映射值，用来帮助理解结果强弱，不代表录取概率。';
 
   rankingList.innerHTML = '';
   ranking.slice(0, 5).forEach((item, index) => {
     const li = document.createElement('li');
-    const percent = index === 0 ? topPercent : clampPercent(mixToPercent(item.mix));
+    const percent = clampPercent(mixToPercent(item.mix));
     li.textContent = `${index + 1}. ${item.school} · ${percent}%`;
     rankingList.appendChild(li);
   });
