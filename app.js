@@ -203,6 +203,8 @@ function handleAnswer(label) {
   const isLast = currentIndex === questions.length - 1;
   if (!isLast) {
     currentIndex += 1;
+    renderQuestion();
+    return;
   }
   renderQuestion();
 }
@@ -265,7 +267,7 @@ prevBtn.addEventListener('click', () => {
 });
 
 nextBtn.addEventListener('click', () => {
-  if (!answers[currentIndex] || currentIndex >= questions.length - 1) return;
+  if (currentIndex >= questions.length - 1) return;
   currentIndex += 1;
   renderQuestion();
 });
