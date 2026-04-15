@@ -124,6 +124,7 @@ const constants = computeConstants();
 let currentIndex = 0;
 let answers = Array(questions.length).fill(null);
 let rawScores = makeEmptyScores();
+let optionOrderCache = {};
 
 function makeEmptyScores() {
   return schoolOrder.reduce((acc, school) => {
@@ -148,6 +149,7 @@ function resetQuiz() {
   currentIndex = 0;
   answers = Array(questions.length).fill(null);
   rawScores = makeEmptyScores();
+  optionOrderCache = {};
 }
 
 function updateProgress() {
@@ -159,15 +161,35 @@ function updateProgress() {
   progressFill.style.width = `${percent}%`;
 }
 
+function shuffleArray(items) {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getOrderedOptions(question) {
+  if (!optionOrderCache[question.id]) {
+    optionOrderCache[question.id] = shuffleArray(question.options.map((option) => option.label));
+  }
+  const optionMap = new Map(question.options.map((option) => [option.label, option]));
+  return optionOrderCache[question.id]
+    .map((label) => optionMap.get(label))
+    .filter(Boolean);
+}
+
 function renderQuestion() {
   clearInteractionState();
   const question = questions[currentIndex];
   const selected = answers[currentIndex];
+  const orderedOptions = getOrderedOptions(question);
   questionTag.textContent = `第 ${question.id} 题`;
   questionText.textContent = question.text;
   optionsContainer.innerHTML = '';
 
-  question.options.forEach((option) => {
+  orderedOptions.forEach((option) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `option-btn${selected === option.label ? ' option-btn-selected' : ''}`;
