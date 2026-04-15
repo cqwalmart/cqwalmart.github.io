@@ -127,14 +127,23 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
   box-shadow: none;
   -webkit-tap-highlight-color: transparent;
 }
-.option-btn:hover { border-color: var(--ink); background: #f3ede1; }
+.option-btn:hover { background: #f3ede1; }
 .option-btn:focus,
 .option-btn:focus-visible,
 .option-btn:active {
   outline: none;
   box-shadow: none;
+  border-color: transparent;
 }
 .option-btn-selected {
+  border-color: var(--ink);
+  background: #f1eadc;
+  box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.04);
+}
+.option-btn-selected:hover,
+.option-btn-selected:focus,
+.option-btn-selected:focus-visible,
+.option-btn-selected:active {
   border-color: var(--ink);
   background: #f1eadc;
   box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.04);
