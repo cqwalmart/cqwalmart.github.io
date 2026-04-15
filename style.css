@@ -192,6 +192,19 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
 }
 .emphasis-box { background: #f4eddf; }
 .ranking-box ol { margin: 12px 0 0; padding: 0; line-height: 1.9; list-style: none; }
+.result-disclaimer-box {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 18px;
+  background: #f9f6ef;
+}
+.result-disclaimer {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(102, 95, 82, 0.82);
+}
 .result-actions {
   display: flex;
   gap: 12px;
