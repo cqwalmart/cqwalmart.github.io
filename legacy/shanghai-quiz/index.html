@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>测测你最适合上哪所上海高校</title>
+    <meta
+      name="description"
+      content="一个按照学校气质、性格、学习方式和人生倾向来乱判你会被哪所上海高校收编的测试。"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <main class="app-card">
+        <section id="screen-intro" class="screen screen-active">
+          <div class="hero-block">
+            <div class="hero-main">
+              <p class="eyebrow">上海高校气质测试（试运行）</p>
+              <h1>测测你最适合上哪所上海高校</h1>
+              <button id="start-btn" class="primary-btn">开始测试</button>
+            </div>
+
+            <div class="hero-copy">
+              <p class="lead">
+                最近各种人格测试火得不讲道理，上海高校生态也不能继续装死了。
+                本测试不会问你“想不想留沪”“喜欢文科还是理科”这种一眼就能装的人设题。
+                它会从你怎么活、怎么学、怎么喜欢人、怎么在群体里站住脚开始，粗暴判断你更像哪种学校的人。
+              </p>
+              <p class="subtle">
+                结果仅供娱乐，不代替高考成绩、志愿填报、家长拍板、班主任建议和命运。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-quiz" class="screen">
+          <div class="quiz-topbar">
+            <div class="progress-meta">
+              <span id="progress-label">第 1 题 / 共 32 题</span>
+              <span id="progress-percent">3%</span>
+            </div>
+            <div class="progress-track">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-tag" id="question-tag">随机抽问</div>
+            <h2 id="question-text">题目加载中...</h2>
+            <div id="options-container" class="options-container"></div>
+          </div>
+        </section>
+
+        <section id="screen-result" class="screen">
+          <div class="result-card">
+            <p class="eyebrow">系统判定结果</p>
+            <h2 id="result-title">你的学校结果</h2>
+            <p id="result-subtitle" class="result-subtitle"></p>
+
+            <div class="result-image-placeholder">
+              <span>结果图占位</span>
+            </div>
+
+            <div class="result-info-grid">
+              <div class="info-box">
+                <div class="info-label">学校简介</div>
+                <p id="result-summary">暂未填写</p>
+              </div>
+              <div class="info-box">
+                <div class="info-label">判定原因</div>
+                <p id="result-reason">暂未填写</p>
+              </div>
+            </div>
+
+            <div class="secondary-result-box">
+              <span class="secondary-label">你差点去了</span>
+              <strong id="runner-up-title">-</strong>
+            </div>
+
+            <div class="result-actions">
+              <button id="retry-btn" class="secondary-btn">再测一次</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

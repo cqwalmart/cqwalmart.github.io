@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>测测你更像上海哪所大学的人｜v4</title>
+    <meta
+      name="description"
+      content="按学习方式、状态、关系和未来取向来乱判你更像上海哪所大学的人。v4 版，16 题。"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <main class="app-card">
+        <section id="screen-intro" class="screen screen-active">
+          <div class="hero-block">
+            <div class="hero-main">
+              <p class="eyebrow">上海高校气质测试 v4</p>
+              <h1>测测你更像上海哪所大学的人</h1>
+              <p class="hero-sub">
+                这版不问你想不想留沪，也不装成志愿填报。它更像在问：你怎么学、怎么累、怎么跟人靠近、以后到底想长成什么样。
+              </p>
+              <button id="start-btn" class="primary-btn">开始测试</button>
+            </div>
+
+            <div class="hero-copy">
+              <div class="intro-box">
+                <div class="intro-title">这一版有什么</div>
+                <ul>
+                  <li>16 题正式版</li>
+                  <li>按 v4 粗矩阵计算</li>
+                  <li>结果是“气质像”，不是“分数够不够”</li>
+                </ul>
+              </div>
+              <p class="subtle">
+                仅供娱乐。别拿它代替高考成绩、招生政策、父母意见、班主任建议和命运安排。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-quiz" class="screen">
+          <div class="quiz-topbar">
+            <div class="progress-meta">
+              <span id="progress-label">第 1 题 / 共 16 题</span>
+              <span id="progress-percent">6%</span>
+            </div>
+            <div class="progress-track">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-tag" id="question-tag">当前题目</div>
+            <h2 id="question-text">题目加载中...</h2>
+            <div id="options-container" class="options-container"></div>
+          </div>
+        </section>
+
+        <section id="screen-result" class="screen">
+          <div class="result-card">
+            <p class="eyebrow">系统判定结果</p>
+            <h2 id="result-title">你的结果</h2>
+            <p id="result-subtitle" class="result-subtitle"></p>
+
+            <div class="result-info-grid top-grid">
+              <div class="info-box emphasis-box">
+                <div class="info-label">一句话</div>
+                <p id="result-summary">-</p>
+              </div>
+              <div class="info-box">
+                <div class="info-label">为什么是它</div>
+                <p id="result-reason">-</p>
+              </div>
+            </div>
+
+            <div class="result-info-grid secondary-grid">
+              <div class="info-box">
+                <div class="info-label">你差点去了</div>
+                <p><strong id="runner-up-title">-</strong></p>
+                <p id="runner-up-gap" class="small-note"></p>
+              </div>
+              <div class="info-box">
+                <div class="info-label">算法备注</div>
+                <p id="result-algo" class="small-note"></p>
+              </div>
+            </div>
+
+            <div class="ranking-box">
+              <div class="info-label">前五排行</div>
+              <ol id="ranking-list"></ol>
+            </div>
+
+            <div class="result-actions">
+              <button id="retry-btn" class="secondary-btn">再测一次</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
