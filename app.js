@@ -1,15 +1,15 @@
-import matrixData from './legacy/shanghai-quiz/v4-matrix-data.json' with { type: 'json' };
+import matrixData from './legacy/shanghai-quiz/v4.1-matrix-data.json' with { type: 'json' };
 
 const RESULT_META = {
   '复旦大学': {
-    subtitle: '被知识、阅读和底子慢慢养起来。',
-    summary: '你更像那种在意东西有没有真正进到自己身上的人。',
-    reason: '你不是只想把题做过去，更在意自己是不是真的知道、有没有底子、有没有长出判断。',
+    subtitle: '读过、想过，也不急着把一切都换算成有用。',
+    summary: '你身上更像有一种读书人气和文化底子。',
+    reason: '你在意的不只是会不会做、快不快懂，而是东西有没有真的长进自己身上，人有没有被阅读、见识和精神生活慢慢养厚。',
   },
   '上海交通大学': {
-    subtitle: '认高压、认硬度，也认更高平台。',
-    summary: '你更相信把能力做到位、把事情做成。',
-    reason: '你吃硬训练、复杂问题和往上顶，也更容易被能做成事、能站到更核心位置的路径打动。',
+    subtitle: '强、能做、能带，也认更高的平台和位置。',
+    summary: '你更像那种把复杂东西真正弄起来的人。',
+    reason: '你不只是认硬度，也认项目感、推进感和带队感。你更容易被那种有工程型魅力、能做成事、还能把人和资源一起带起来的路径打动。',
   },
   '上海科技大学': {
     subtitle: '往未知和非标准环境里长。',
@@ -68,6 +68,9 @@ const quizScreen = document.getElementById('screen-quiz');
 const resultScreen = document.getElementById('screen-result');
 const startBtn = document.getElementById('start-btn');
 const retryBtn = document.getElementById('retry-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const submitBtn = document.getElementById('submit-btn');
 const questionTag = document.getElementById('question-tag');
 const questionText = document.getElementById('question-text');
 const optionsContainer = document.getElementById('options-container');
@@ -117,6 +120,7 @@ function computeConstants() {
 
 const constants = computeConstants();
 let currentIndex = 0;
+let answers = Array(questions.length).fill(null);
 let rawScores = makeEmptyScores();
 
 function makeEmptyScores() {
@@ -133,6 +137,7 @@ function showScreen(screen) {
 
 function resetQuiz() {
   currentIndex = 0;
+  answers = Array(questions.length).fill(null);
   rawScores = makeEmptyScores();
 }
 
@@ -147,22 +152,31 @@ function updateProgress() {
 
 function renderQuestion() {
   const question = questions[currentIndex];
-  questionTag.textContent = `v4 · 第 ${question.id} 题`;
+  const selected = answers[currentIndex];
+  questionTag.textContent = `第 ${question.id} 题`;
   questionText.textContent = question.text;
   optionsContainer.innerHTML = '';
 
   question.options.forEach((option) => {
     const button = document.createElement('button');
     button.className = 'option-btn';
+    if (selected === option.label) button.style.borderColor = 'var(--ink)';
     button.innerHTML = `
       <span class="option-row">
         <span class="option-label">${option.label}</span>
         <span class="option-text">${getOptionText(question.id, option.label)}</span>
       </span>
     `;
-    button.addEventListener('click', () => handleAnswer(option));
+    button.addEventListener('click', () => handleAnswer(option.label));
     optionsContainer.appendChild(button);
   });
+
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = !answers[currentIndex];
+  const isLast = currentIndex === questions.length - 1;
+  nextBtn.classList.toggle('hidden', isLast);
+  submitBtn.classList.toggle('hidden', !isLast);
+  submitBtn.disabled = !answers[currentIndex];
 
   updateProgress();
 }
@@ -172,15 +186,23 @@ function getOptionText(questionId, label) {
   return texts?.[label] || label;
 }
 
-function handleAnswer(option) {
-  option.vector.forEach((value, index) => {
-    rawScores[schoolOrder[index]] += value;
+function recomputeScores() {
+  rawScores = makeEmptyScores();
+  answers.forEach((label, index) => {
+    if (!label) return;
+    const vector = questions[index].options.find((opt) => opt.label === label)?.vector || [];
+    vector.forEach((value, sIndex) => {
+      rawScores[schoolOrder[sIndex]] += value;
+    });
   });
+}
 
-  currentIndex += 1;
-  if (currentIndex >= questions.length) {
-    finishQuiz();
-    return;
+function handleAnswer(label) {
+  answers[currentIndex] = label;
+  recomputeScores();
+  const isLast = currentIndex === questions.length - 1;
+  if (!isLast) {
+    currentIndex += 1;
   }
   renderQuestion();
 }
@@ -210,7 +232,7 @@ function renderResult() {
   resultReason.textContent = meta.reason;
   runnerUpTitle.textContent = second ? second.school : '-';
   runnerUpGap.textContent = second ? `和第二名差距：${(top.mix - second.mix).toFixed(3)}` : '';
-  resultAlgo.textContent = '当前算法：mix = 0.75 × z_score + 0.25 × raw_centered（基于 v4 粗矩阵）';
+  resultAlgo.textContent = '结果说明文案稍后细修，这里先放占位版本。';
 
   rankingList.innerHTML = '';
   ranking.slice(0, 5).forEach((item, index) => {
@@ -234,6 +256,23 @@ startBtn.addEventListener('click', () => {
 retryBtn.addEventListener('click', () => {
   resetQuiz();
   showScreen(introScreen);
+});
+
+prevBtn.addEventListener('click', () => {
+  if (currentIndex === 0) return;
+  currentIndex -= 1;
+  renderQuestion();
+});
+
+nextBtn.addEventListener('click', () => {
+  if (!answers[currentIndex] || currentIndex >= questions.length - 1) return;
+  currentIndex += 1;
+  renderQuestion();
+});
+
+submitBtn.addEventListener('click', () => {
+  if (!answers[currentIndex]) return;
+  finishQuiz();
 });
 
 const OPTION_TEXT = {
