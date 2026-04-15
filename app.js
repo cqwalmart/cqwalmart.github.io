@@ -189,13 +189,14 @@ function renderQuestion() {
   questionText.textContent = question.text;
   optionsContainer.innerHTML = '';
 
-  orderedOptions.forEach((option) => {
+  orderedOptions.forEach((option, displayIndex) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `option-btn${selected === option.label ? ' option-btn-selected' : ''}`;
+    const displayLabel = String.fromCharCode(65 + displayIndex);
     button.innerHTML = `
       <span class="option-row">
-        <span class="option-label">${option.label}</span>
+        <span class="option-label">${displayLabel}</span>
         <span class="option-text">${getOptionText(question.id, option.label)}</span>
       </span>
     `;
