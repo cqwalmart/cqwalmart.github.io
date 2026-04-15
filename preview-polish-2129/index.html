@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>上海高校气质测试</title>
+    <meta
+      name="description"
+      content="按学习方式、状态、关系和未来取向来测试你会被哪种上海高校气质认领。"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <main class="app-card">
+        <section id="screen-intro" class="screen screen-active">
+          <div class="hero-block">
+            <div class="hero-main">
+              <p class="eyebrow">上海高校气质测试</p>
+              <h1>你会被哪种上海高校气质认领？</h1>
+              <p class="hero-sub">
+                它不太关心你考不考得上，也不假装在帮你填志愿。它更像是在看：你怎么学、怎么累、怎么跟人靠近、以后更想长成什么样的人。
+              </p>
+              <button id="start-btn" class="primary-btn">开始测试</button>
+            </div>
+
+            <div class="hero-copy">
+              <p class="subtle">
+                本测试结果仅供娱乐与话题讨论使用，不构成任何招生判断、升学建议、专业推荐或现实决策依据，也不替代考试成绩、官方政策、学校信息、家长意见及个人实际情况。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-quiz" class="screen">
+          <div class="quiz-topbar">
+            <div class="progress-meta">
+              <span id="progress-label">第 1 题 / 共 16 题</span>
+              <span id="progress-percent">6%</span>
+            </div>
+            <div class="progress-track">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-tag" id="question-tag">当前题目</div>
+            <h2 id="question-text">题目加载中...</h2>
+            <div id="options-container" class="options-container"></div>
+            <div class="quiz-actions">
+              <button id="prev-btn" class="secondary-btn" disabled>上一题</button>
+              <button id="next-btn" class="secondary-btn" disabled>下一题</button>
+              <button id="submit-btn" class="primary-btn hidden">提交</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-result" class="screen">
+          <div class="result-card">
+            <p class="eyebrow">系统判定结果</p>
+            <h2 id="result-title">你的结果</h2>
+            <p id="result-subtitle" class="result-subtitle"></p>
+
+            <div class="result-info-grid top-grid">
+              <div class="info-box emphasis-box">
+                  <p id="result-match" class="match-score">--%</p>
+                <p id="result-summary">-</p>
+              </div>
+              <div class="info-box">
+                <div class="info-label">为什么是它</div>
+                <p id="result-reason">-</p>
+              </div>
+            </div>
+
+            <div class="result-info-grid secondary-grid">
+              <div class="info-box">
+                <div class="info-label">也许也会很合</div>
+                <p><strong id="runner-up-title">-</strong></p>
+                <p id="runner-up-match" class="small-note"></p>
+                <p id="runner-up-gap" class="small-note"></p>
+              </div>
+              <div class="info-box">
+                <div class="info-label">结果备注</div>
+                <p id="result-algo" class="small-note">结果说明文案稍后细修，这里先放占位版本。</p>
+              </div>
+            </div>
+
+            <div class="ranking-box">
+              <div class="info-label">前五排行</div>
+              <ol id="ranking-list"></ol>
+            </div>
+
+            <div class="result-actions">
+              <button id="share-btn" class="primary-btn">分享结果</button>
+              <button id="retry-btn" class="secondary-btn">再测一次</button>
+            </div>
+          </div>
+        </section>
+      </main>
+      <div class="build-stamp">preview polish-2129</div>
+    </div>
+
+    <script type="module" src="./app.js?v=preview-polish-2129"></script>
+  </body>
+</html>
