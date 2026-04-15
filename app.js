@@ -132,7 +132,14 @@ function makeEmptyScores() {
   }, {});
 }
 
+function clearInteractionState() {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+}
+
 function showScreen(screen) {
+  clearInteractionState();
   [introScreen, quizScreen, resultScreen].forEach((node) => node.classList.remove('screen-active'));
   screen.classList.add('screen-active');
 }
@@ -153,6 +160,7 @@ function updateProgress() {
 }
 
 function renderQuestion() {
+  clearInteractionState();
   const question = questions[currentIndex];
   const selected = answers[currentIndex];
   questionTag.textContent = `第 ${question.id} 题`;
@@ -213,6 +221,10 @@ function handleAnswer(label) {
   const isLast = currentIndex === questions.length - 1;
   if (!isLast) {
     currentIndex += 1;
+    window.setTimeout(() => {
+      renderQuestion();
+    }, 80);
+    return;
   }
   renderQuestion();
 }
