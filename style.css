@@ -44,19 +44,12 @@ button { font: inherit; }
 .hero-main { text-align: center; }
 .hero-copy { max-width: 720px; margin: 28px auto 0; }
 .hero-sub { max-width: 700px; margin: 18px auto 0; line-height: 1.8; color: var(--muted); }
-.intro-box {
-  border: 1px solid var(--line);
-  background: #faf6ee;
-  border-radius: 20px;
-  padding: 20px 22px;
-}
-.intro-title, .info-label, .eyebrow, .question-tag {
+.info-label, .eyebrow, .question-tag {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 12px;
   color: var(--muted);
 }
-.intro-box ul { margin: 12px 0 0 18px; padding: 0; line-height: 1.8; }
 
 h1, h2 { margin: 0; line-height: 1.08; }
 h1 { font-size: clamp(36px, 6vw, 64px); }
@@ -97,6 +90,14 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
 
 .question-card { padding: 40px 32px 48px; }
 .options-container { display: grid; gap: 14px; }
+.quiz-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.hidden { display: none !important; }
 .option-btn {
   text-align: left; background: #f8f5ee; border: 1px solid transparent; padding: 20px 22px; color: var(--ink);
 }
@@ -125,4 +126,5 @@ h1 { font-size: clamp(36px, 6vw, 64px); }
   .hero-block, .result-card, .question-card { padding: 28px 20px 32px; }
   .quiz-topbar { padding: 20px 20px 16px; }
   .result-info-grid { grid-template-columns: 1fr; }
+  .quiz-actions { flex-direction: column; }
 }

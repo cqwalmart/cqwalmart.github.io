@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>测测你更像上海哪所大学的人｜v4</title>
+    <title>上海高校气质测试</title>
     <meta
       name="description"
-      content="按学习方式、状态、关系和未来取向来乱判你更像上海哪所大学的人。v4 版，16 题。"
+      content="按学习方式、状态、关系和未来取向来测试你会被哪种上海高校气质认领。"
     />
     <link rel="stylesheet" href="./style.css" />
   </head>
@@ -16,25 +16,17 @@
         <section id="screen-intro" class="screen screen-active">
           <div class="hero-block">
             <div class="hero-main">
-              <p class="eyebrow">上海高校气质测试 v4</p>
-              <h1>测测你更像上海哪所大学的人</h1>
+              <p class="eyebrow">上海高校气质测试</p>
+              <h1>你会被哪种上海高校气质认领？</h1>
               <p class="hero-sub">
-                这版不问你想不想留沪，也不装成志愿填报。它更像在问：你怎么学、怎么累、怎么跟人靠近、以后到底想长成什么样。
+                它不太关心你考不考得上，也不假装在帮你填志愿。它更像是在看：你怎么学、怎么累、怎么跟人靠近、以后更想长成什么样的人。
               </p>
               <button id="start-btn" class="primary-btn">开始测试</button>
             </div>
 
             <div class="hero-copy">
-              <div class="intro-box">
-                <div class="intro-title">这一版有什么</div>
-                <ul>
-                  <li>16 题正式版</li>
-                  <li>按 v4 粗矩阵计算</li>
-                  <li>结果是“气质像”，不是“分数够不够”</li>
-                </ul>
-              </div>
               <p class="subtle">
-                仅供娱乐。别拿它代替高考成绩、招生政策、父母意见、班主任建议和命运安排。
+                本测试结果仅供娱乐与话题讨论使用，不构成任何招生判断、升学建议、专业推荐或现实决策依据，也不替代考试成绩、官方政策、学校信息、家长意见及个人实际情况。
               </p>
             </div>
           </div>
@@ -55,6 +47,11 @@
             <div class="question-tag" id="question-tag">当前题目</div>
             <h2 id="question-text">题目加载中...</h2>
             <div id="options-container" class="options-container"></div>
+            <div class="quiz-actions">
+              <button id="prev-btn" class="secondary-btn">上一题</button>
+              <button id="next-btn" class="secondary-btn" disabled>下一题</button>
+              <button id="submit-btn" class="primary-btn hidden">提交</button>
+            </div>
           </div>
         </section>
 
@@ -82,8 +79,8 @@
                 <p id="runner-up-gap" class="small-note"></p>
               </div>
               <div class="info-box">
-                <div class="info-label">算法备注</div>
-                <p id="result-algo" class="small-note"></p>
+                <div class="info-label">结果备注</div>
+                <p id="result-algo" class="small-note">结果说明文案稍后细修，这里先放占位版本。</p>
               </div>
             </div>
 
