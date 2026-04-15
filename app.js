@@ -79,9 +79,11 @@ const progressPercent = document.getElementById('progress-percent');
 const progressFill = document.getElementById('progress-fill');
 const resultTitle = document.getElementById('result-title');
 const resultSubtitle = document.getElementById('result-subtitle');
+const resultMatch = document.getElementById('result-match');
 const resultSummary = document.getElementById('result-summary');
 const resultReason = document.getElementById('result-reason');
 const runnerUpTitle = document.getElementById('runner-up-title');
+const runnerUpMatch = document.getElementById('runner-up-match');
 const runnerUpGap = document.getElementById('runner-up-gap');
 const resultAlgo = document.getElementById('result-algo');
 const rankingList = document.getElementById('ranking-list');
@@ -222,24 +224,55 @@ function computeMixScores() {
     .sort((a, b) => b.mix - a.mix);
 }
 
+function mixToPercent(mix) {
+  if (mix <= -1) return 35;
+  if (mix <= -0.5) return 42;
+  if (mix <= 0) return 50;
+  if (mix <= 0.5) return 58;
+  if (mix <= 1.0) return 66;
+  if (mix <= 1.5) return 73;
+  if (mix <= 2.0) return 79;
+  if (mix <= 2.5) return 84;
+  if (mix <= 3.0) return 88;
+  if (mix <= 4.0) return 92;
+  return 95;
+}
+
+function gapAdjust(gap) {
+  if (gap < 0.15) return -4;
+  if (gap < 0.35) return -2;
+  if (gap < 0.7) return 0;
+  if (gap < 1.2) return 2;
+  return 4;
+}
+
+function clampPercent(value) {
+  return Math.max(35, Math.min(96, Math.round(value)));
+}
+
 function renderResult() {
   const ranking = computeMixScores();
   const top = ranking[0];
   const second = ranking[1];
   const meta = RESULT_META[top.school];
+  const topGap = second ? top.mix - second.mix : 0;
+  const topPercent = clampPercent(mixToPercent(top.mix) + gapAdjust(topGap));
 
   resultTitle.textContent = top.school;
   resultSubtitle.textContent = meta.subtitle;
+  resultMatch.textContent = `${topPercent}%`;
   resultSummary.textContent = meta.summary;
   resultReason.textContent = meta.reason;
   runnerUpTitle.textContent = second ? second.school : '-';
-  runnerUpGap.textContent = second ? `和第二名差距：${(top.mix - second.mix).toFixed(3)}` : '';
-  resultAlgo.textContent = '结果说明文案稍后细修，这里先放占位版本。';
+  runnerUpMatch.textContent = second ? `气质匹配率 ${clampPercent(mixToPercent(second.mix))}%` : '';
+  runnerUpGap.textContent = second ? `和第一名差距 ${topGap.toFixed(3)}` : '';
+  resultAlgo.textContent = '匹配率为展示映射值，用来帮助理解结果强弱，不代表录取概率。';
 
   rankingList.innerHTML = '';
   ranking.slice(0, 5).forEach((item, index) => {
     const li = document.createElement('li');
-    li.textContent = `${index + 1}. ${item.school}（mix ${item.mix.toFixed(3)}｜raw ${item.raw.toFixed(2)}）`;
+    const percent = index === 0 ? topPercent : clampPercent(mixToPercent(item.mix));
+    li.textContent = `${index + 1}. ${item.school} · ${percent}%`;
     rankingList.appendChild(li);
   });
 }
