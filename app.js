@@ -161,8 +161,7 @@ function renderQuestion() {
 
   question.options.forEach((option) => {
     const button = document.createElement('button');
-    button.className = 'option-btn';
-    if (selected === option.label) button.style.borderColor = 'var(--ink)';
+    button.className = `option-btn${selected === option.label ? ' option-btn-selected' : ''}`;
     button.innerHTML = `
       <span class="option-row">
         <span class="option-label">${option.label}</span>
