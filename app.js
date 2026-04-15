@@ -48,7 +48,7 @@ const RESULT_META = {
   },
   '华东理工大学': {
     subtitle: '低调稳、耐干、顶用、靠谱。',
-    summary: '你对“真能顶事”特别敏感。',
+    summary: '你对"真能顶事"特别敏感。',
     reason: '你不太吃虚的，更信长期稳定、补强、落地和硬度，也更容易尊重真正做得出来、靠得住的人。',
   },
   '东华大学': {
@@ -59,7 +59,7 @@ const RESULT_META = {
   '上海纽约大学': {
     subtitle: '另一种人生排法、另一套生活节奏。',
     summary: '你更容易被非模板的人生吸过去。',
-    reason: '你不太满足于普通路径，更容易被新秩序、新环境和一种“原来还能这样活”的感觉打中。',
+    reason: '你不太满足于普通路径，更容易被新秩序、新环境和一种"原来还能这样活"的感觉打中。',
   },
 };
 
@@ -68,6 +68,9 @@ const quizScreen = document.getElementById('screen-quiz');
 const resultScreen = document.getElementById('screen-result');
 const startBtn = document.getElementById('start-btn');
 const retryBtn = document.getElementById('retry-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const submitBtn = document.getElementById('submit-btn');
 const questionTag = document.getElementById('question-tag');
 const questionText = document.getElementById('question-text');
 const optionsContainer = document.getElementById('options-container');
@@ -119,6 +122,7 @@ function computeConstants() {
 
 const constants = computeConstants();
 let currentIndex = 0;
+let answers = Array(questions.length).fill(null);
 let rawScores = makeEmptyScores();
 
 function makeEmptyScores() {
@@ -135,6 +139,7 @@ function showScreen(screen) {
 
 function resetQuiz() {
   currentIndex = 0;
+  answers = Array(questions.length).fill(null);
   rawScores = makeEmptyScores();
 }
 
@@ -149,6 +154,7 @@ function updateProgress() {
 
 function renderQuestion() {
   const question = questions[currentIndex];
+  const selected = answers[currentIndex];
   questionTag.textContent = `第 ${question.id} 题`;
   questionText.textContent = question.text;
   optionsContainer.innerHTML = '';
@@ -156,15 +162,23 @@ function renderQuestion() {
   question.options.forEach((option) => {
     const button = document.createElement('button');
     button.className = 'option-btn';
+    if (selected === option.label) button.style.borderColor = 'var(--ink)';
     button.innerHTML = `
       <span class="option-row">
         <span class="option-label">${option.label}</span>
         <span class="option-text">${getOptionText(question.id, option.label)}</span>
       </span>
     `;
-    button.addEventListener('click', () => handleAnswer(option.vector));
+    button.addEventListener('click', () => handleAnswer(option.label));
     optionsContainer.appendChild(button);
   });
+
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = !answers[currentIndex];
+  const isLast = currentIndex === questions.length - 1;
+  nextBtn.classList.toggle('hidden', isLast);
+  submitBtn.classList.toggle('hidden', !isLast);
+  submitBtn.disabled = !answers[currentIndex];
 
   updateProgress();
 }
@@ -174,14 +188,24 @@ function getOptionText(questionId, label) {
   return texts?.[label] || label;
 }
 
-function handleAnswer(vector) {
-  vector.forEach((value, index) => {
-    rawScores[schoolOrder[index]] += value;
+function recomputeScores() {
+  rawScores = makeEmptyScores();
+  answers.forEach((label, index) => {
+    if (!label) return;
+    const vector = questions[index].options.find((opt) => opt.label === label)?.vector || [];
+    vector.forEach((value, sIndex) => {
+      rawScores[schoolOrder[sIndex]] += value;
+    });
   });
+}
 
-  currentIndex += 1;
-  if (currentIndex >= questions.length) {
-    finishQuiz();
+function handleAnswer(label) {
+  answers[currentIndex] = label;
+  recomputeScores();
+  const isLast = currentIndex === questions.length - 1;
+  if (!isLast) {
+    currentIndex += 1;
+    renderQuestion();
     return;
   }
   renderQuestion();
@@ -267,6 +291,23 @@ startBtn.addEventListener('click', () => {
 retryBtn.addEventListener('click', () => {
   resetQuiz();
   showScreen(introScreen);
+});
+
+prevBtn.addEventListener('click', () => {
+  if (currentIndex === 0) return;
+  currentIndex -= 1;
+  renderQuestion();
+});
+
+nextBtn.addEventListener('click', () => {
+  if (currentIndex >= questions.length - 1) return;
+  currentIndex += 1;
+  renderQuestion();
+});
+
+submitBtn.addEventListener('click', () => {
+  if (!answers[currentIndex]) return;
+  finishQuiz();
 });
 
 const OPTION_TEXT = {
